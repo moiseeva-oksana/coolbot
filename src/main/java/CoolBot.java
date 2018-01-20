@@ -5,13 +5,7 @@ import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
-import repositories.MapRepo;
 import services.RepoService;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class CoolBot extends TelegramLongPollingBot {
     private RepoService repoService = new RepoService();
@@ -48,15 +42,17 @@ public class CoolBot extends TelegramLongPollingBot {
                 case "/history":
                     historyProceed(message);
                     break;
+                case "/myhashtags":
+                    allHashtagsProceed(message);
+                    break;
                 case "/help":
                     sendMsg(message, Util.HELP);
                     break;
                 default:
-                    if(text.matches("^[\\\\/]#[a-zA-z0-9]+$")) {
+                    if (text.matches("^[\\\\/]#[a-zA-z0-9]+$")) {
                         String tags = repoService.allNotesWithHashTag(message);
                         sendMsg(message, "Your notes of " + tags);
-                    }
-                    else {
+                    } else {
                         repoService.add(message);
                         sendMsg(message, "Your note has been added");
                     }
@@ -65,8 +61,13 @@ public class CoolBot extends TelegramLongPollingBot {
         }
     }
 
+    private void allHashtagsProceed(Message message) {
+        String answer = repoService.getAllHashtgsByUser(message.getFrom());
+        sendMsg(message, "There are all your hashtags:\n" + answer);
+    }
+
     private void historyProceed(Message message) {
-        String answer = repoService.getAllNotesOfUser(message.getFrom()).toString();
+        String answer = repoService.getAllNotesOfUser(message.getFrom());
         sendMsg(message, "There are all your notes:\n" + answer);
     }
 
