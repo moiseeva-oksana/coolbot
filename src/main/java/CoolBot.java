@@ -5,6 +5,8 @@ import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
+import repositories.MapRepo;
+import services.RepoService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CoolBot extends TelegramLongPollingBot {
-    private static Map<Integer, List<String>> history = new HashMap<>();
+    private RepoService repoService = new RepoService();
 
     public static void main(String[] args) {
         ApiContextInitializer.init();
@@ -36,13 +38,12 @@ public class CoolBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        System.out.println(history);
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
             final String text = message.getText();
             switch (text) {
                 case "/start":
-                    sendMsg(message, "Type any string and I will tell you is it a palindrome");
+                    sendMsg(message, "Type you note here");
                     break;
                 case "/history":
                     historyProceed(message);
@@ -51,17 +52,22 @@ public class CoolBot extends TelegramLongPollingBot {
                     sendMsg(message, Util.HELP);
                     break;
                 default:
-                    history.putIfAbsent(message.getFrom().getId(), new ArrayList<>());
-                    history.get(message.getFrom().getId()).add(text);
-                    sendMsg(message, String.valueOf(Util.isPalindrome(text)));
+                    if(text.matches("^[\\\\/]#[a-zA-z0-9]+$")) {
+                        String tags = repoService.allNotesWithHashTag(message);
+                        sendMsg(message, "Your notes of " + tags);
+                    }
+                    else {
+                        repoService.add(message);
+                        sendMsg(message, "Your note has been added");
+                    }
 
             }
         }
     }
 
     private void historyProceed(Message message) {
-        String answer = history.getOrDefault(message.getFrom().getId() , new ArrayList<>()).toString();
-        sendMsg(message, "There are words you have already checked:\n" + answer);
+        String answer = repoService.getAllNotesOfUser(message.getFrom()).toString();
+        sendMsg(message, "There are all your notes:\n" + answer);
     }
 
     private void sendMsg(Message message, String text) {
