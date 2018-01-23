@@ -1,5 +1,5 @@
-import org.telegram.telegrambots.ApiContextInitializer;
-import org.telegram.telegrambots.TelegramBotsApi;
+package start;
+
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
@@ -8,17 +8,13 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import services.RepoService;
 
 public class CoolBot extends TelegramLongPollingBot {
+    public static final String HELP =
+            "Type any string and bot will save it as a note \n" +
+                    "Type '/history' to see list of notes you have already saved \n" +
+                    "Add '#hashtag' at the end of your note to mark the note with a hashtag, for example 'Hunger games#books'\n" +
+                    "To see all notes with particular hashtag type '/#hastag', for example '/#books' " +
+                    "Type '/myhashtags' to see all hashtags you have used\n";
     private RepoService repoService = new RepoService();
-
-    public static void main(String[] args) {
-        ApiContextInitializer.init();
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
-        try {
-            telegramBotsApi.registerBot(new CoolBot());
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public String getBotUsername() {
@@ -46,7 +42,7 @@ public class CoolBot extends TelegramLongPollingBot {
                     allHashtagsProceed(message);
                     break;
                 case "/help":
-                    sendMsg(message, Util.HELP);
+                    sendMsg(message, HELP);
                     break;
                 default:
                     if (text.matches("^[\\\\/]#[a-zA-z0-9]+$")) {
