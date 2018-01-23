@@ -1,5 +1,6 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "2.0.2"
+    id "com.heroku.sdk.heroku-gradle" version "1.0.1"
 }
 version '1.0-SNAPSHOT'
 
@@ -21,6 +22,11 @@ jar {
                 'Main-Class': 'start.Main'
         )
     }
+}
+
+heroku {
+    includes = ["build/libs/coolbot-1.0-SNAPSHOT-all.jar"]
+    includeBuildDir = false
 }
 
 task stage(dependsOn: ['build', 'clean'])
