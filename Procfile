@@ -1,1 +1,1 @@
-web: java -jar build/libs/coolbot-1.0-SNAPSHOT-all.jar
+worker: java -jar build/libs/coolbot-1.0-SNAPSHOT-all.jar
