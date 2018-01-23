@@ -1,1 +1,1 @@
-web: java -jar build/libs/coolbot-1.0-SNAPSHOT-all.jar
+web: java -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/coolbot-1.0-SNAPSHOT-all.jar
