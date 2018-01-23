@@ -8,7 +8,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import services.RepoService;
 
 public class CoolBot extends TelegramLongPollingBot {
-    public static final String HELP =
+    private static final String HELP =
             "Type any string and bot will save it as a note \n" +
                     "Type '/history' to see list of notes you have already saved \n" +
                     "Add '#hashtag' at the end of your note to mark the note with a hashtag, for example 'Hunger games#books'\n" +
@@ -50,7 +50,7 @@ public class CoolBot extends TelegramLongPollingBot {
                         sendMsg(message, "Your notes of " + tags);
                     } else {
                         repoService.add(message);
-                        sendMsg(message, "Your note has been added");
+                        sendMsg(message, "Your note has been saved");
                     }
 
             }
