@@ -1,21 +1,20 @@
 package repositories;
 
+import models.Note;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.User;
 
 import java.util.*;
 
 public class NotesMapRepo {
-    private static Map<Integer, List<String>> history = new HashMap<>();
-    private static Map<Integer, Set<String>> hashtags = new HashMap<>();
+    private static Map<Integer, List<Note>> history = new HashMap<>();
 
-    public void add(Message message) {
-        history.putIfAbsent(message.getFrom().getId(), new ArrayList<>());
-        String text = message.getText();
-        history.get(message.getFrom().getId()).add(text);
+    public void add(Note note) {
+        history.putIfAbsent(note.getUserId(), new ArrayList<>());
+        history.get(note.getUserId()).add(note);
     }
 
-    public List<String> getAllNotesOfUser(User user) {
+    public List<Note> getAllNotesOfUser(User user) {
         return history.getOrDefault(user.getId(), new ArrayList<>());
     }
 }

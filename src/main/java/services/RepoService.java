@@ -1,5 +1,6 @@
 package services;
 
+import models.Note;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.User;
 import repositories.HashTagsMapRepo;
@@ -19,23 +20,24 @@ public class RepoService {
         StringBuilder result = new StringBuilder(hash).append(":\n");
         notesMapRepo.getAllNotesOfUser(message.getFrom())
                 .stream()
-                .filter(t -> t.endsWith(hash))
-                .map(t -> t.substring(0, t.indexOf("#")))
+                .filter(t -> t.getContent().endsWith(hash))
+                .map(t -> t.getContent().substring(0, t.getContent().indexOf("#")))
                 .forEach(t -> result.append(t).append("\n"));
         return result.toString();
     }
 
     public void add(Message message) {
+        Note note = new Note(message.getText(), message.getFrom().getId());
         String text = message.getText();
         if (text.contains("#")) {
             hashTagsMapRepo.add(message.getFrom(), text.substring(text.indexOf('#')));
         }
-        notesMapRepo.add(message);
+        notesMapRepo.add(note);
     }
 
     public String getAllNotesOfUser(User user) {
         StringBuffer result = new StringBuffer();
-        List<String> notes = notesMapRepo.getAllNotesOfUser(user);
+        List<Note> notes = notesMapRepo.getAllNotesOfUser(user);
         notes.forEach(t -> result.append(t).append("\n"));
         return result.toString();
     }
