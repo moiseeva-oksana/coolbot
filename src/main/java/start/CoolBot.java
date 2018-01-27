@@ -58,7 +58,7 @@ public class CoolBot extends TelegramLongPollingBot {
     }
 
     private void allHashtagsProceed(Message message) {
-        String answer = repoService.getAllHashtgsByUser(message.getFrom());
+        String answer = repoService.getAllHashTagsByUser(message.getFrom());
         sendMsg(message, "There are all your hashtags:\n" + answer);
     }
 

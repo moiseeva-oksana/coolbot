@@ -6,8 +6,8 @@ import org.telegram.telegrambots.api.objects.User;
 import repositories.HashTagsMapRepo;
 import repositories.NotesMapRepo;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class RepoService {
@@ -16,22 +16,28 @@ public class RepoService {
 
     public String allNotesWithHashTag(Message message) {
         String text = message.getText();
-        String hash = text.substring(text.indexOf("#"));
-        StringBuilder result = new StringBuilder(hash).append(":\n");
+        String hashTag = text.substring(text.indexOf("#"));
+        StringBuilder result = new StringBuilder(hashTag).append(":\n");
         notesMapRepo.getAllNotesOfUser(message.getFrom())
                 .stream()
-                .filter(t -> t.getContent().endsWith(hash))
-                .map(t -> t.getContent().substring(0, t.getContent().indexOf("#")))
+                .filter(t -> Objects.equals(hashTag, t.getHashTag()))
+                .map(Note::getContent)
                 .forEach(t -> result.append(t).append("\n"));
         return result.toString();
     }
 
     public void add(Message message) {
-        Note note = new Note(message.getText(), message.getFrom().getId());
+        Note note = new Note();
+        note.setUserId(message.getFrom().getId());
         String text = message.getText();
+        String content = text;
         if (text.contains("#")) {
+            String hashTag = text.substring(text.indexOf('#'));
+            content = text.substring(0, text.indexOf('#'));
+            note.setHashTag(hashTag);
             hashTagsMapRepo.add(message.getFrom(), text.substring(text.indexOf('#')));
         }
+        note.setContent(content);
         notesMapRepo.add(note);
     }
 
@@ -42,10 +48,10 @@ public class RepoService {
         return result.toString();
     }
 
-    public String getAllHashtgsByUser(User user) {
+    public String getAllHashTagsByUser(User user) {
         StringBuffer result = new StringBuffer();
-        Set<String> hashtags = hashTagsMapRepo.getAllHastgsByUser(user);
-        hashtags.forEach(t -> result.append("/").append(t).append("\n"));
+        Set<String> hashTags = hashTagsMapRepo.getAllHastgsByUser(user);
+        hashTags.forEach(t -> result.append("/").append(t).append("\n"));
         return result.toString();
     }
 }
