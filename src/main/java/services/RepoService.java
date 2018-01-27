@@ -54,4 +54,9 @@ public class RepoService {
         hashTags.forEach(t -> result.append("/").append(t).append("\n"));
         return result.toString();
     }
+
+    public String deleteNoteById(Message message) {
+        int noteId = Integer.parseInt(message.getText().substring(2));
+        return notesMapRepo.deleteNoteById(noteId, message.getFrom());
+    }
 }

@@ -45,7 +45,11 @@ public class CoolBot extends TelegramLongPollingBot {
                     sendMsg(message, HELP);
                     break;
                 default:
-                    if (text.matches("^[\\\\/]#[a-zA-z0-9]+$")) {
+                    if(text.matches("[\\\\/]d[0-9]+$")) {
+                        String deleted = repoService.deleteNoteById(message);
+                        sendMsg(message, "You note '" + deleted + "' has been deleted");
+                    }
+                    else if (text.matches("^[\\\\/]#[a-zA-z0-9]+$")) {
                         String tags = repoService.allNotesWithHashTag(message);
                         sendMsg(message, "Your notes of " + tags);
                     } else {

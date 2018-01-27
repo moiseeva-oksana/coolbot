@@ -17,8 +17,16 @@ public class NotesMapRepo {
         return notes.getOrDefault(user.getId(), new ArrayList<>());
     }
 
-    public void deleteNoteById(int noteId, User user) {
+    public String deleteNoteById(int noteId, User user) {
         List<Note> allNotesOfUser = getAllNotesOfUser(user);
+        String content = null;
+        for (Note note : allNotesOfUser) {
+            if (note.getId() == noteId) {
+                content = note.getContent();
+                break;
+            }
+        }
         allNotesOfUser.removeIf(t -> t.getId() == noteId);
+        return content;
     }
 }
