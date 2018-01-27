@@ -12,7 +12,7 @@ public class CoolBot extends TelegramLongPollingBot {
             "Type any string and bot will save it as a note \n" +
                     "Type '/history' to see list of notes you have already saved \n" +
                     "Add '#hashtag' at the end of your note to mark the note with a hashtag, for example 'Hunger games#books'\n" +
-                    "To see all notes with particular hashtag type '/#hastag', for example '/#books' " +
+                    "To see all notes with particular hashtag type '/#hastag', for example '/#books'\n" +
                     "Type '/myhashtags' to see all hashtags you have used\n" +
                     "Type '/d'+id of note to delete the note, for example '/d1' or '/d12'";
     private RepoService repoService = new RepoService();
