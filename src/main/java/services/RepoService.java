@@ -3,16 +3,17 @@ package services;
 import models.Note;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.User;
-import repositories.HashTagsMapRepo;
-import repositories.NotesMapRepo;
+import repositories.*;
+import repositories.interfaces.HashTagsRepo;
+import repositories.interfaces.NotesRepo;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 public class RepoService {
-    private NotesMapRepo notesMapRepo = new NotesMapRepo();
-    private HashTagsMapRepo hashTagsMapRepo = new HashTagsMapRepo();
+    private NotesRepo notesMapRepo = new JdbcNotesRepo();
+    private HashTagsRepo hashTagsMapRepo = new JdbcHashTagRepo();
 
     public String allNotesWithHashTag(Message message) {
         String text = message.getText();

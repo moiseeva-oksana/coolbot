@@ -1,18 +1,18 @@
 package models;
 
 public class Note {
-    private static int count = 0;
     private int id;
     private String content;
     private String hashTag;
     private int userId;
 
-    public Note() {
-        id = ++count;
-    }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getContent() {
